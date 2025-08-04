@@ -1,3 +1,17 @@
+## 9.5.20250802 is now available!
+
+__July 19, 2025__
+
+You can install the equivalent python wheel with the command
+
+```sh
+pip install "vtk==9.5.20250802.dev0" --extra-index-url https://wheels.vtk.org
+```
+
+The WASM bundle is available here:
+1. [vtk-9.5.20250802-wasm32-emscripten.tar.gz](https://gitlab.kitware.com/vtk/vtk/-/package_files/5576/download)
+2. [vtk-9.5.20250802-wasm64-emscripten.tar.gz](https://gitlab.kitware.com/vtk/vtk/-/package_files/5577/download)
+
 ## 9.5.20250726 is now available!
 
 __July 19, 2025__
@@ -11,6 +25,12 @@ pip install "vtk==9.5.20250726.dev0" --extra-index-url https://wheels.vtk.org
 The WASM bundle is available here:
 1. [vtk-9.5.20250726-wasm32-emscripten.tar.gz](https://gitlab.kitware.com/vtk/vtk/-/package_files/5534/download)
 2. [vtk-9.5.20250726-wasm64-emscripten.tar.gz](https://gitlab.kitware.com/vtk/vtk/-/package_files/5533/download)
+
+## Support clip planes in webgpu polydata mapper
+
+__July 23, 2025__
+
+Support clipping in vtkWebGPUPolyDataMapper
 
 ## 9.5.20250719 is now available!
 
