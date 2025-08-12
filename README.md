@@ -4,6 +4,8 @@
 
 This repository provides the infrastructure to bundle the pure JavaScript library for loading VTK.wasm.
 
+The full usage documentation of vtk-wasm can be found at: https://kitware.github.io/vtk-wasm/
+
 ### File Structure
 
 - `src/` — Source code for the library.
