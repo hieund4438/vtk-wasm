@@ -13,7 +13,7 @@ For those not familiar with trame, trame allow to define an interactive applicat
 With trame or any Python project it is best to start with an isolated virtual environment. In the code below we will be using __uv__ as a unified way of setting such environment across platforms.
 
 ::: code-group
-```sh [macOS and Linus]
+```sh [macOS and Linux]
 # you can choose any Python version where VTK is supported
 # So far [3.8 to 3.13]
 uv venv -p 3.10
