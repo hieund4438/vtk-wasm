@@ -36,22 +36,25 @@ function isSameConfig(a, b) {
 }
 
 export function generateWasmConfig(config) {
-  return {
-    locateFile: (fileName) => {
+  if (WASM_FILE_OBJECT) {
+    config.locateFile = (fileName) => {
       if (WASM_FILE_OBJECT && fileName == WASM_FILE_OBJECT.name) {
         return URL.createObjectURL(WASM_FILE_OBJECT);
       }
       return new URL(fileName, import.meta.url).href;
-    },
-    onRuntimeInitialized: (module) => {
-      if (WASM_FILE_OBJECT) {
-        URL.revokeObjectURL(WASM_FILE_OBJECT);
-      }
-    },
-    preRun: config?.rendering === "webgpu" ? [(module) => {
-      module.ENV.VTK_GRAPHICS_BACKEND = "WEBGPU";
-    }] : [],
+    };
+    config.onRuntimeInitialized = () => {
+      // Free the object URL after runtime is initialized
+      URL.revokeObjectURL(WASM_FILE_OBJECT);
+      WASM_FILE_OBJECT = null;
+    };
   }
+  if (config?.rendering === "webgpu") {
+    config.preRun = [(module) => {
+      module.ENV.VTK_GRAPHICS_BACKEND = "WEBGPU";
+    }];
+  }
+  return config;
 }
 
 /**
