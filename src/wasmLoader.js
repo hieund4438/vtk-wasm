@@ -35,26 +35,32 @@ function isSameConfig(a, b) {
   return a.rendering === b.rendering && a.exec === b.exec;
 }
 
+/**
+ * Generate a WebAssembly configuration object from a wasmLoader config.
+ * @param {*} config - wasmLoader config with 'rendering' and 'exec' keys.
+ * @returns wasmConfig object
+ */
 export function generateWasmConfig(config) {
+  let wasmConfig = {}
   if (WASM_FILE_OBJECT) {
-    config.locateFile = (fileName) => {
+    wasmConfig.locateFile = (fileName) => {
       if (WASM_FILE_OBJECT && fileName == WASM_FILE_OBJECT.name) {
         return URL.createObjectURL(WASM_FILE_OBJECT);
       }
       return new URL(fileName, import.meta.url).href;
     };
-    config.onRuntimeInitialized = () => {
+    wasmConfig.onRuntimeInitialized = () => {
       // Free the object URL after runtime is initialized
       URL.revokeObjectURL(WASM_FILE_OBJECT);
       WASM_FILE_OBJECT = null;
     };
   }
   if (config?.rendering === "webgpu") {
-    config.preRun = [(module) => {
+    wasmConfig.preRun = [(module) => {
       module.ENV.VTK_GRAPHICS_BACKEND = "WEBGPU";
     }];
   }
-  return config;
+  return wasmConfig;
 }
 
 /**
