@@ -2,7 +2,6 @@ import untar from "js-untar";
 
 const LOADED_URLS = [];
 const PROMISES = {};
-let WASM_FILE_OBJECT = null;
 
 /**
  * Create a future that returns
@@ -33,34 +32,6 @@ function convertToStr(state) {
 
 function isSameConfig(a, b) {
   return a.rendering === b.rendering && a.exec === b.exec;
-}
-
-/**
- * Generate a WebAssembly configuration object from a wasmLoader config.
- * @param {*} config - wasmLoader config with 'rendering' and 'exec' keys.
- * @returns wasmConfig object
- */
-export function generateWasmConfig(config) {
-  let wasmConfig = {}
-  if (WASM_FILE_OBJECT) {
-    wasmConfig.locateFile = (fileName) => {
-      if (WASM_FILE_OBJECT && fileName == WASM_FILE_OBJECT.name) {
-        return URL.createObjectURL(WASM_FILE_OBJECT);
-      }
-      return new URL(fileName, import.meta.url).href;
-    };
-    wasmConfig.onRuntimeInitialized = () => {
-      // Free the object URL after runtime is initialized
-      URL.revokeObjectURL(WASM_FILE_OBJECT);
-      WASM_FILE_OBJECT = null;
-    };
-  }
-  if (config?.rendering === "webgpu") {
-    wasmConfig.preRun = [(module) => {
-      module.ENV.VTK_GRAPHICS_BACKEND = "WEBGPU";
-    }];
-  }
-  return wasmConfig;
 }
 
 /**
@@ -98,12 +69,14 @@ export function loadScriptAsModule(url) {
  * @property {Boolean} loaded
  */
 export class VtkWASMLoader {
+  #wasm;
+  #wasmFile;
   constructor() {
     this.loaded = false;
     this.loadingPending = null;
-    this.wasm = null;
     this.config = {};
-    this.runtimes = [];
+    this.#wasm = { url: null, instance: null };
+    this.#wasmFile = null;
   }
 
   /**
@@ -178,8 +151,7 @@ export class VtkWASMLoader {
             if (file.name === `${wasmBaseName}WebAssembly${this.config?.exec === "async" ? "Async" : ""}.mjs`) {
               jsModuleURL = URL.createObjectURL(new File([file.buffer], file.name, { type: "text/javascript" }));
             } else if (file.name === `${wasmBaseName}WebAssembly${this.config?.exec === "async" ? "Async" : ""}.wasm`) {
-              // Create a file URL for the wasm file so it can be loaded
-              WASM_FILE_OBJECT = new File([file.buffer], file.name, { type: "application/wasm" });
+              this.#wasmFile = file;
             }
           });
         } else {
@@ -225,7 +197,7 @@ export class VtkWASMLoader {
 
       // Load WASM
       if (window.createVTKWASM) {
-        this.wasm = await window.createVTKWASM(generateWasmConfig(this.config));
+        this.#wasm.instance = await window.createVTKWASM(this.#generateWasmConfig(this.config));
       }
 
       // Capture objects
@@ -242,26 +214,32 @@ export class VtkWASMLoader {
    * @returns
    */
   async createRemoteSession(config) {
-    if (this.wasm) {
+    if (this.#wasm.instance) {
       // New API
-      if (this.wasm?.isAsync && this.wasm.isAsync()) {
+      if (this.#wasm.instance?.isAsync && this.#wasm.instance.isAsync()) {
         if (!config || isSameConfig(this.config, config)) {
           // Reuse the same runtime
           console.log("(Main runtime in async)");
-          return new this.wasm.vtkRemoteSession();
+          return new this.#wasm.instance.vtkRemoteSession();
         } else {
           console.log("(New in async)");
           const newWASMRuntime = await window.createVTKWASM(
-            generateWasmConfig(config || this.config),
+            this.#generateWasmConfig(config || this.config),
           );
           return new newWASMRuntime.vtkRemoteSession();
         }
       } else {
         console.log("(New in sync)");
-        const newWASMRuntime = await window.createVTKWASM(
-          generateWasmConfig(config || this.config),
-        );
-        return new newWASMRuntime.vtkRemoteSession();
+        if (!config || isSameConfig(this.config, config)) {
+          // Reuse the same runtime
+          return new this.#wasm.instance.vtkRemoteSession();
+        }
+        else {
+          const newWASMRuntime = await window.createVTKWASM(
+            this.#generateWasmConfig(config || this.config),
+          );
+          return new newWASMRuntime.vtkRemoteSession();
+        }
       }
     }
 
@@ -277,17 +255,49 @@ export class VtkWASMLoader {
    * @returns
    */
   createStandaloneSession() {
-    if (!this.wasm) {
+    if (!this.#wasm.instance) {
       throw new Error("Current WASM version does not support standalone mode");
     }
-    return new this.wasm.vtkStandaloneSession();
+    return new this.#wasm.instance.vtkStandaloneSession();
   }
 
   /** Helper for handling API change */
   createStateDecorator() {
-    if (this.wasm) {
+    if (this.#wasm.instance) {
       return convertToObj;
     }
     return convertToStr;
+  }
+
+  /**
+   * Generate a WebAssembly configuration object from a wasmLoader config.
+   * @param {*} config - wasmLoader config with 'rendering' and 'exec' keys.
+   * @returns wasmConfig object
+   */
+  #generateWasmConfig(config) {
+    let wasmConfig = {}
+    if (this.#wasmFile !== null) {
+      wasmConfig.locateFile = (fileName) => {
+        if (this.#wasmFile === null) {
+          throw new Error("WASM file unexpectedly transitioned to null");
+        }
+        if (fileName == this.#wasmFile.name) {
+          this.#wasm.url = URL.createObjectURL(new File([this.#wasmFile.buffer], this.#wasmFile.name, { type: "application/wasm" }));
+          return this.#wasm.url;
+        }
+        return new URL(fileName, import.meta.url).href;
+      };
+      wasmConfig.onRuntimeInitialized = () => {
+        // Free the object URL after runtime is initialized
+        URL.revokeObjectURL(this.#wasm.url);
+        this.#wasm.url = null;
+      };
+    }
+    if (config?.rendering === "webgpu") {
+      wasmConfig.preRun = [(module) => {
+        module.ENV.VTK_GRAPHICS_BACKEND = "WEBGPU";
+      }];
+    }
+    return wasmConfig;
   }
 }
