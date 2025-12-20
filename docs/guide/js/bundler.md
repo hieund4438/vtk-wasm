@@ -18,7 +18,7 @@ npm run build
 ```
 :::
 
-Since we are not publishing our WASM bundle to npm yet, we are using the one hosted on our documentation web site under `https://kitware.github.io/vtk-wasm/wasm32/9.5.0/vtkWebAssembly.mjs`. But you can also download it from our [CI registry](https://gitlab.kitware.com/vtk/vtk/-/packages?orderBy=created_at&sort=desc&search[]=wasm) and serve it or import it yourself.
+Here, the VTK.wasm bundle is downloaded in the browser directly from the Gitlab package registry. See the `src/main.js` file for the relevant code.
 
 
 ## Result
