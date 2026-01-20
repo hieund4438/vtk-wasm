@@ -8,20 +8,22 @@ The full usage documentation of vtk-wasm can be found at: https://kitware.github
 
 ### File Structure
 
-- `src/` — Source code for the library.
 - `dist/` — Bundled output files.
-- `wasm/` — WebAssembly binaries and related assets.
-- `scripts/` — Utility scripts for building and packaging.
-- `README.md` — Project documentation.
+- `examples/` — Example applications demonstrating vtk-wasm usage.
+- `docs/` — Documentation and guide pages.
+- `src/` — Source code for the library.
+- `README.md` — Project documentation.  
 - `package.json` — Project metadata and build scripts.
 
 ### Build Scripts
 
 The following scripts are available in `package.json`:
 
+- **`npm run docs:dev`** - Starts a local development server for the guide pages with live reloading
 - **`npm run docs:build`** - Builds the guide pages for VTK.wasm
 - **`npm run build`** — Builds the ESM and UMD bundles for both RemoteSession and StandaloneSession.
 - **`npm run build:esm`** — Builds only the ESM bundles.
+- **`npm run build:examples`** — Builds the example applications.
 - **`npm run build:vtk`** — Builds only the UMD bundle for StandaloneSession.
 - **`npm run build:viewer`** - Builds the vtkWASMViewer JavaScript library.
 - **`npm run clean`** — Cleans the `dist/` directory.
