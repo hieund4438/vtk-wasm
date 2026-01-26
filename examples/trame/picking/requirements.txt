@@ -1,9 +1,7 @@
---extra-index-url https://wheels.vtk.org
+--index-url https://wheels.vtk.org
 
-trame>=3.9
+trame>=3.12
 trame-vuetify
-trame-vtklocal>=0.13
+trame-vtklocal>=0.16
 
-# Either vtk version works
-vtk==9.5.20250607.dev0
-# vtk==9.5.0rc3
+vtk>=9.6

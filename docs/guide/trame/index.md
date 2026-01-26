@@ -20,10 +20,10 @@ uv venv -p 3.10
 source .venv/bin/activate
 
 # install dependencies
-uv pip install "vtk==9.5.20250531.dev0" --extra-index-url https://wheels.vtk.org # get latest vtk with all the wasm capabilities
-uv pip install "trame>3.9"    # Install recent trame
-uv pip install trame-vuetify  # - add some nice GUI widget for trame
-uv pip install "trame-vtklocal>=0.12.3" # - add VTK.wasm widget for trame
+uv pip install "vtk>=9.6" --index-url https://wheels.vtk.org --prerelease=allow
+uv pip install "trame>=3.12"          # Install recent trame
+uv pip install trame-vuetify          # - add some nice GUI widget for trame
+uv pip install "trame-vtklocal>=0.16" # - add VTK.wasm widget for trame
 ```
 ```sh [Windows]
 # you can choose any Python version where VTK is supported
@@ -32,10 +32,11 @@ uv venv -p 3.10
 .venv\Scripts\activate
 
 # install dependencies
-uv pip install "vtk==9.5.20250531.dev0" --extra-index-url https://wheels.vtk.org # get latest vtk with all the wasm capabilities
-uv pip install "trame>3.9"    # Install recent trame
-uv pip install trame-vuetify  # - add some nice GUI widget for trame
-uv pip install "trame-vtklocal>=0.12.3" # - add VTK.wasm widget for trame
+# Use `--index-url https://wheels.vtk.org` below for nighlty version of VTK
+uv pip install "vtk>=9.6" --index-url https://wheels.vtk.org --prerelease=allow
+uv pip install "trame>=3.12"            # Install recent trame
+uv pip install trame-vuetify            # - add some nice GUI widget for trame
+uv pip install "trame-vtklocal>=0.16" # - add VTK.wasm widget for trame
 ```
 :::
 
@@ -55,4 +56,4 @@ The key take away is that the `vtkRenderWindow` instance needs to be pass to the
 - __`update_throttle(push_camera=False)`__: synchronize the current state of the vtkRenderWindow to the client but no more than the provided rate (`view.update_throttle.rate = 15` or in widget constructor `throttle_rate=20`)
 - __`reset_camera(renderer_or_render_window=None)`__: reset the camera by asking the client (JavaScript) to do it.
 
-The [__full working code__](https://github.com/Kitware/vtk-wasm/tree/main/examples/trame/simple) is also available. 
+The [__full working code__](https://github.com/Kitware/vtk-wasm/tree/main/examples/trame/simple) is also available.

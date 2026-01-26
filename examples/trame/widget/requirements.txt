@@ -1,7 +1,7 @@
---extra-index-url https://wheels.vtk.org
+--index-url https://wheels.vtk.org
 
-trame>=3.9
+trame>=3.12
 trame-vuetify
-trame-vtklocal>=0.12.3
+trame-vtklocal>=0.16
 
-vtk==9.5.20250531.dev0
+vtk>=9.6

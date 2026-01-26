@@ -15,3 +15,11 @@ Finally you can configure the maximum update rate you can have the server update
 
 
 ![](cone.png)
+
+## Setup
+
+```sh
+uv venv
+uv pip install --prerelease=allow -r ./requirements.txt
+uv run ./cone.py
+```

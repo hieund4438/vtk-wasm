@@ -10,3 +10,11 @@ The code show how to create a picker and register to the view so it can be sent 
 ![](pick1.png)
 ![](pick2.png)
 ![](pick3.png)
+
+## Setup
+
+```sh
+uv venv
+uv pip install --prerelease=allow -r ./requirements.txt
+uv run ./pick.py
+```
