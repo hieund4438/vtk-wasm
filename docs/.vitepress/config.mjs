@@ -51,6 +51,7 @@ export default defineConfig({
       { text: "Home", link: "/" },
       { text: "News", link: "/news" },
       { text: "Guides", link: "/guide/" },
+      { text: "Roadmap", link: "/roadmap" },
       // { text: 'Use Cases', link: '/usecase/' },
       {
         text: "Resources",

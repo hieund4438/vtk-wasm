@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "VTK WebAssembly Features",
+  "description": "A schema for tracking the status of features in VTK WebAssembly.",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "featureVersionGroups": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/feature-version-group"
+      }
+    },
+    "moduleSerialization": {
+      "$ref": "#/definitions/module-serialization"
+    }
+  },
+  "required": [
+    "featureVersionGroups",
+    "moduleSerialization"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "feature-info": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "implemented",
+            "planned",
+            "na"
+          ]
+        },
+        "url": {
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "const": "na"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "description",
+        "version",
+        "status"
+      ]
+    },
+    "feature-version-group": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "features": {
+          "type": "array",
+          "elements": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/definitions/feature-info"
+            }
+          }
+        }
+      }
+    },
+    "module-serdes": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "coverage": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            {
+              "const": "na"
+            }
+          ]
+        },
+        "missingClasses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "fully-implemented",
+            "partially-implemented",
+            "planned",
+            "na"
+          ]
+        },
+        "url": {
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "const": "na"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "description",
+        "version",
+        "status"
+      ]
+    },
+    "module-serialization": {
+      "type": "object",
+      "properties": {
+        "serializedModules": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/module-serdes"
+          }
+        },
+        "notSerializedModules": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "serializedModules",
+        "notSerializedModules"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

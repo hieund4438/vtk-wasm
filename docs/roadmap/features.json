@@ -1,0 +1,455 @@
+{
+  "$schema": "./features.schema.json",
+  "featureVersionGroups": {
+    "planned": {
+      "description": "Features planned for next release",
+      "features": [
+        {
+          "interactor-style-manipulator": {
+            "description": "Interactor style manipulators",
+            "status": "planned",
+            "version": "na"
+          }
+        },
+        {
+          "pipeline-parity-with-vtkjs": {
+            "description": "Pipeline parity with vtk.js",
+            "status": "planned",
+            "version": "na"
+          }
+        },
+        {
+          "rendering-feature-parity": {
+            "description": "Rendering feature parity with VTK desktop",
+            "status": "planned",
+            "version": "na"
+          }
+        },
+        {
+          "serialization-mtime-optimization": {
+            "description": "MTime optimization for serialization",
+            "status": "planned",
+            "version": "na"
+          }
+        },
+        {
+          "shared-libraries": {
+            "description": "Shared libraries",
+            "status": "planned",
+            "version": "na"
+          }
+        },
+        {
+          "type-hints": {
+            "description": "Type hints (*.d.ts files)",
+            "status": "planned",
+            "version": "na"
+          }
+        },
+        {
+          "wasm64-loader-support": {
+            "description": "64-bit VTK.wasm loader",
+            "status": "planned",
+            "version": "na"
+          }
+        }
+      ]
+    },
+    "implemented-in-9.6.0": {
+      "description": "Features released in 9.6.0",
+      "features": [
+        {
+          "javascript-object-api-parity": {
+            "description": "JavaScript object API parity",
+            "status": "implemented",
+            "version": "9.6.0"
+          }
+        },
+        {
+          "python-trame-parity": {
+            "description": "Trame local rendering parity",
+            "status": "implemented",
+            "version": "9.6.0"
+          }
+        },
+        {
+          "remote-session-bulk-get-set": {
+            "description": "Bulk get/set session API",
+            "status": "implemented",
+            "version": "9.6.0"
+          }
+        },
+        {
+          "runtime-webgl2-webgpu-selection": {
+            "description": "Runtime selection of WebGL2 vs WebGPU",
+            "status": "implemented",
+            "version": "9.6.0"
+          }
+        },
+        {
+          "wasm64-build-support": {
+            "description": "64-bit VTK.wasm package",
+            "status": "implemented",
+            "version": "9.6.0"
+          }
+        }
+      ]
+    },
+    "implemented-in-9.5.0": {
+      "description": "Features released in 9.5.0",
+      "features": [
+        {
+          "serialization-ci": {
+            "description": "CI validation for serdes",
+            "status": "implemented",
+            "version": "9.5.0"
+          }
+        },
+        {
+          "wasm32-build-support": {
+            "description": "32-bit VTK.wasm package",
+            "status": "implemented",
+            "version": "9.5.0"
+          }
+        }
+      ]
+    }
+  },
+  "moduleSerialization": {
+    "notSerializedModules": [
+      "VTK::CommonArchive",
+      "VTK::CommonComputationalGeometry",
+      "VTK::CommonMath",
+      "VTK::CommonSystem",
+      "VTK::DomainsChemistry",
+      "VTK::DomainsChemistryOpenGL2",
+      "VTK::DomainsMicroscopy",
+      "VTK::DomainsParallelChemistry",
+      "VTK::FiltersAMR",
+      "VTK::FiltersCellGrid",
+      "VTK::FiltersExtraction",
+      "VTK::FiltersFlowPaths",
+      "VTK::FiltersGeneral",
+      "VTK::FiltersGeneric",
+      "VTK::FiltersGeometry",
+      "VTK::FiltersGeometryPreview",
+      "VTK::FiltersHybrid",
+      "VTK::FiltersHyperTree",
+      "VTK::FiltersImaging",
+      "VTK::FiltersMeshing",
+      "VTK::FiltersModeling",
+      "VTK::FiltersONNX",
+      "VTK::FiltersOpenTURNS",
+      "VTK::FiltersParallel",
+      "VTK::FiltersParallelDIY2",
+      "VTK::FiltersParallelFlowPaths",
+      "VTK::FiltersParallelGeometry",
+      "VTK::FiltersParallelImaging",
+      "VTK::FiltersParallelMPI",
+      "VTK::FiltersParallelMomentInvariants",
+      "VTK::FiltersParallelStatistics",
+      "VTK::FiltersParallelVerdict",
+      "VTK::FiltersPoints",
+      "VTK::FiltersProgrammable",
+      "VTK::FiltersPython",
+      "VTK::FiltersReduction",
+      "VTK::FiltersReebGraph",
+      "VTK::FiltersSMP",
+      "VTK::FiltersSelection",
+      "VTK::FiltersStatistics",
+      "VTK::FiltersTemporal",
+      "VTK::FiltersTensor",
+      "VTK::FiltersTexture",
+      "VTK::FiltersTopology",
+      "VTK::FiltersVerdict",
+      "VTK::GeoVisCore",
+      "VTK::GeoVisGDAL",
+      "VTK::IOADIOS2",
+      "VTK::IOAMR",
+      "VTK::IOAlembic",
+      "VTK::IOAsynchronous",
+      "VTK::IOAvmesh",
+      "VTK::IOCGNS",
+      "VTK::IOCONVERGECFD",
+      "VTK::IOCatalystConduit",
+      "VTK::IOCellGrid",
+      "VTK::IOCesium3DTiles",
+      "VTK::IOChemistry",
+      "VTK::IOCityGML",
+      "VTK::IOCore",
+      "VTK::IOERF",
+      "VTK::IOEnSight",
+      "VTK::IOEngys",
+      "VTK::IOExodus",
+      "VTK::IOExport",
+      "VTK::IOExportGL2PS",
+      "VTK::IOExportPDF",
+      "VTK::IOFDS",
+      "VTK::IOFFMPEG",
+      "VTK::IOFLUENTCFF",
+      "VTK::IOFides",
+      "VTK::IOGDAL",
+      "VTK::IOGeoJSON",
+      "VTK::IOGeometry",
+      "VTK::IOH5Rage",
+      "VTK::IOH5part",
+      "VTK::IOHDF",
+      "VTK::IOHDFTools",
+      "VTK::IOIFC",
+      "VTK::IOIOSS",
+      "VTK::IOImage",
+      "VTK::IOImport",
+      "VTK::IOInfovis",
+      "VTK::IOLANLX3D",
+      "VTK::IOLAS",
+      "VTK::IOLSDyna",
+      "VTK::IOLegacy",
+      "VTK::IOMINC",
+      "VTK::IOMPIImage",
+      "VTK::IOMPIParallel",
+      "VTK::IOMotionFX",
+      "VTK::IOMovie",
+      "VTK::IOMySQL",
+      "VTK::IONetCDF",
+      "VTK::IOOCCT",
+      "VTK::IOODBC",
+      "VTK::IOOMF",
+      "VTK::IOOggTheora",
+      "VTK::IOOpenVDB",
+      "VTK::IOPDAL",
+      "VTK::IOPIO",
+      "VTK::IOPLY",
+      "VTK::IOParallel",
+      "VTK::IOParallelExodus",
+      "VTK::IOParallelLSDyna",
+      "VTK::IOParallelNetCDF",
+      "VTK::IOParallelXML",
+      "VTK::IOParallelXdmf3",
+      "VTK::IOPostgreSQL",
+      "VTK::IOSQL",
+      "VTK::IOSegY",
+      "VTK::IOTRUCHAS",
+      "VTK::IOTecplotTable",
+      "VTK::IOUSD",
+      "VTK::IOVPIC",
+      "VTK::IOVeraOut",
+      "VTK::IOVideo",
+      "VTK::IOXML",
+      "VTK::IOXMLParser",
+      "VTK::IOXdmf2",
+      "VTK::IOXdmf3",
+      "VTK::ImagingFourier",
+      "VTK::ImagingGeneral",
+      "VTK::ImagingHybrid",
+      "VTK::ImagingMath",
+      "VTK::ImagingMorphological",
+      "VTK::ImagingOpenGL2",
+      "VTK::ImagingSources",
+      "VTK::ImagingStatistics",
+      "VTK::ImagingStencil",
+      "VTK::InteractionImage",
+      "VTK::RenderingANARI",
+      "VTK::RenderingExternal",
+      "VTK::RenderingFFMPEGOpenGL2",
+      "VTK::RenderingFreeType",
+      "VTK::RenderingFreeTypeFontConfig",
+      "VTK::RenderingGL2PSOpenGL2",
+      "VTK::RenderingHyperTreeGrid",
+      "VTK::RenderingLICOpenGL2",
+      "VTK::RenderingLOD",
+      "VTK::RenderingMatplotlib",
+      "VTK::RenderingOpenVR",
+      "VTK::RenderingOpenXR",
+      "VTK::RenderingOpenXRRemoting",
+      "VTK::RenderingParallel",
+      "VTK::RenderingParallelLIC",
+      "VTK::RenderingPythonContext2D",
+      "VTK::RenderingQt",
+      "VTK::RenderingRayTracing",
+      "VTK::RenderingSceneGraph",
+      "VTK::RenderingTk",
+      "VTK::RenderingVR",
+      "VTK::RenderingVRModels",
+      "VTK::RenderingVolumeAMR",
+      "VTK::RenderingVtkJS",
+      "VTK::RenderingZSpace"
+    ],
+    "serializedModules": {
+      "VTK::ChartsCore": {
+        "description": "Serialization coverage for VTK::ChartsCore",
+        "missingClasses": [],
+        "status": "fully-implemented",
+        "version": "9.5.0"
+      },
+      "VTK::CommonColor": {
+        "description": "Serialization coverage for VTK::CommonColor",
+        "missingClasses": [],
+        "status": "fully-implemented",
+        "version": "9.5.0"
+      },
+      "VTK::CommonCore": {
+        "description": "Serialization coverage for VTK::CommonCore",
+        "missingClasses": [],
+        "status": "fully-implemented",
+        "version": "9.5.0"
+      },
+      "VTK::CommonDataModel": {
+        "description": "Serialization coverage for VTK::CommonDataModel",
+        "missingClasses": [],
+        "status": "partially-implemented",
+        "version": "9.5.0"
+      },
+      "VTK::CommonExecutionModel": {
+        "description": "Serialization coverage for VTK::CommonExecutionModel",
+        "missingClasses": [],
+        "status": "fully-implemented",
+        "version": "9.5.0"
+      },
+      "VTK::CommonMath": {
+        "description": "Serialization coverage for VTK::CommonMath",
+        "missingClasses": [],
+        "status": "partially-implemented",
+        "version": "9.5.0"
+      },
+      "VTK::CommonMisc": {
+        "description": "Serialization coverage for VTK::CommonMisc",
+        "missingClasses": [],
+        "status": "fully-implemented",
+        "version": "9.5.0"
+      },
+      "VTK::CommonTransforms": {
+        "description": "Serialization coverage for VTK::CommonTransforms",
+        "missingClasses": [],
+        "status": "partially-implemented",
+        "version": "9.5.0"
+      },
+      "VTK::FiltersCore": {
+        "description": "Serialization coverage for VTK::FiltersCore",
+        "missingClasses": [],
+        "status": "fully-implemented",
+        "version": "9.5.0"
+      },
+      "VTK::FiltersSources": {
+        "description": "Serialization coverage for VTK::FiltersSources",
+        "missingClasses": [],
+        "status": "fully-implemented",
+        "version": "9.5.0"
+      },
+      "VTK::ImagingColor": {
+        "description": "Serialization coverage for VTK::ImagingColor",
+        "missingClasses": [],
+        "status": "partially-implemented",
+        "version": "9.5.0"
+      },
+      "VTK::ImagingCore": {
+        "description": "Serialization coverage for VTK::ImagingCore",
+        "missingClasses": [],
+        "status": "partially-implemented",
+        "version": "9.5.0"
+      },
+      "VTK::InteractionStyle": {
+        "description": "Serialization coverage for VTK::InteractionStyle",
+        "missingClasses": [],
+        "status": "fully-implemented",
+        "version": "9.5.0"
+      },
+      "VTK::InteractionWidgets": {
+        "description": "Serialization coverage for VTK::InteractionWidgets",
+        "missingClasses": [],
+        "status": "partially-implemented",
+        "version": "9.5.0"
+      },
+      "VTK::RenderingAnnotation": {
+        "description": "Serialization coverage for VTK::RenderingAnnotation",
+        "missingClasses": [],
+        "status": "partially-implemented",
+        "version": "9.5.0"
+      },
+      "VTK::RenderingContext2D": {
+        "description": "Serialization coverage for VTK::RenderingContext2D",
+        "missingClasses": [],
+        "status": "fully-implemented",
+        "version": "9.5.0"
+      },
+      "VTK::RenderingContextOpenGL2": {
+        "description": "Serialization coverage for VTK::RenderingContextOpenGL2",
+        "missingClasses": [],
+        "status": "fully-implemented",
+        "version": "9.5.0"
+      },
+      "VTK::RenderingCore": {
+        "coverage": 95,
+        "description": "Serialization coverage for VTK::RenderingCore",
+        "missingClasses": [],
+        "status": "partially-implemented",
+        "version": "9.5.0"
+      },
+      "VTK::RenderingGridAxes": {
+        "description": "Serialization coverage for VTK::RenderingGridAxes",
+        "missingClasses": [],
+        "status": "partially-implemented",
+        "version": "9.5.0"
+      },
+      "VTK::RenderingImage": {
+        "description": "Serialization coverage for VTK::RenderingImage",
+        "missingClasses": [],
+        "status": "partially-implemented",
+        "version": "9.5.0"
+      },
+      "VTK::RenderingLabel": {
+        "description": "Serialization coverage for VTK::RenderingLabel",
+        "missingClasses": [],
+        "status": "fully-implemented",
+        "version": "9.5.0"
+      },
+      "VTK::RenderingOpenGL2": {
+        "description": "Serialization coverage for VTK::RenderingOpenGL2",
+        "missingClasses": [],
+        "status": "partially-implemented",
+        "version": "9.5.0"
+      },
+      "VTK::RenderingUI": {
+        "description": "Serialization coverage for VTK::RenderingUI",
+        "missingClasses": [],
+        "status": "fully-implemented",
+        "version": "9.5.0"
+      },
+      "VTK::RenderingVolume": {
+        "description": "Serialization coverage for VTK::RenderingVolume",
+        "missingClasses": [],
+        "status": "partially-implemented",
+        "version": "9.5.0"
+      },
+      "VTK::RenderingVolumeOpenGL2": {
+        "description": "Serialization coverage for VTK::RenderingVolumeOpenGL2",
+        "missingClasses": [],
+        "status": "partially-implemented",
+        "version": "9.5.0"
+      },
+      "VTK::RenderingWebGPU": {
+        "description": "Serialization coverage for VTK::RenderingWebGPU",
+        "missingClasses": [],
+        "status": "partially-implemented",
+        "version": "9.5.0"
+      },
+      "VTK::ViewsContext2D": {
+        "description": "Serialization coverage for VTK::ViewsContext2D",
+        "missingClasses": [],
+        "status": "fully-implemented",
+        "version": "9.5.0"
+      },
+      "VTK::ViewsCore": {
+        "description": "Serialization coverage for VTK::ViewsCore",
+        "missingClasses": [],
+        "status": "fully-implemented",
+        "version": "9.5.0"
+      },
+      "VTK::ViewsInfovis": {
+        "description": "Serialization coverage for VTK::ViewsInfovis",
+        "missingClasses": [],
+        "status": "partially-implemented",
+        "version": "9.5.0"
+      }
+    }
+  }
+}
