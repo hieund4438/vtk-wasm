@@ -51,7 +51,13 @@ export default defineConfig({
       { text: "Home", link: "/" },
       { text: "News", link: "/news" },
       { text: "Guides", link: "/guide/" },
-      { text: "Roadmap", link: "/roadmap" },
+      { text: "Roadmap",
+        items: [
+          { text: "Overview", link: "/roadmap/" },
+          { text: "Feature Status", link: "/roadmap/features" },
+          { text: "Module Availability", link: "/roadmap/modules" },
+        ]
+      },
       // { text: 'Use Cases', link: '/usecase/' },
       {
         text: "Resources",
@@ -108,6 +114,11 @@ export default defineConfig({
             { text: "Generating data", link: "/guide/viewer/data" },
           ],
         },
+      ],
+      "/roadmap/": [
+        { text: "Overview", link: "/roadmap/" },
+        { text: "Feature Status", link: "/roadmap/features" },
+        { text: "Module Availability", link: "/roadmap/modules" },
       ],
       "/usecase/": [{ text: "Examples", link: "/usecase/index" }],
     },
