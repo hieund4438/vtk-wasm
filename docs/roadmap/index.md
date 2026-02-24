@@ -22,11 +22,11 @@ import roadMapData from './features.json';
 ### Planned in next release (9.7.0)
 <FeatureStatusTable version-group="planned" />
 
-### Released in 9.6.0
-<FeatureStatusTable version-group="implemented-in-9.6.0" />
+### Released in 9.6.x
+<FeatureStatusTable version-group="implemented-in-9.6.x" />
 
-### Released in 9.5.0
-<FeatureStatusTable version-group="implemented-in-9.5.0" />
+### Released in 9.5.x
+<FeatureStatusTable version-group="implemented-in-9.5.x" />
 
 
 ## Serialized Modules Coverage

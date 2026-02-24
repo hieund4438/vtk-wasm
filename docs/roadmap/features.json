@@ -55,7 +55,7 @@
         }
       ]
     },
-    "implemented-in-9.6.0": {
+    "implemented-in-9.6.x": {
       "description": "Features released in 9.6.0",
       "features": [
         {
@@ -95,7 +95,7 @@
         }
       ]
     },
-    "implemented-in-9.5.0": {
+    "implemented-in-9.5.x": {
       "description": "Features released in 9.5.0",
       "features": [
         {
