@@ -677,6 +677,7 @@ function getClassNameHighlightParts(className) {
 
 .class-list-table {
   width: 100%;
+  display: inline-table !important;
   border-collapse: collapse;
   font-size: 0.72rem;
 }
