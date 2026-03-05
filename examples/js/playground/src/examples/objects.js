@@ -4,7 +4,7 @@ const htmlCode = `<!doctype html>
     <script
       src="https://unpkg.com/@kitware/vtk-wasm/vtk-umd.js"
       id="vtk-wasm"
-      data-url="https://gitlab.kitware.com/api/v4/projects/13/packages/generic/vtk-wasm32-emscripten/9.5.20250913/vtk-9.5.20250913-wasm32-emscripten.tar.gz"></script>
+      data-url="https://gitlab.kitware.com/api/v4/projects/13/packages/generic/vtk-wasm32-emscripten/9.6.20260228/vtk-9.6.20260228-wasm32-emscripten.tar.gz"></script>
   </head>
   <body>
   </body>
@@ -29,7 +29,9 @@ renderer.activeCamera = camera;
 // await renderer.setActiveCamera(camera); // same as above
 console.log("New active camera at: ", renderer.activeCamera.position)
 /// 4. Print a VTK object using JSON.stringify
-console.log(JSON.stringify(renderer));`;
+console.log(JSON.stringify(renderer));
+/// 5. Print a VTK object using toString (calls C++ Print() directly)
+console.log(renderer.toString());
 const editorHeightPx = 400;
 const iframeMinHeightPx = 0;
 export { htmlCode, jsCode, editorHeightPx, iframeMinHeightPx };
