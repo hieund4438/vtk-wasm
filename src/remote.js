@@ -2,6 +2,7 @@ import "./style.css";
 
 import { VtkWASMLoader } from "./wasmLoader";
 import { createVtkObjectProxy } from "./core/proxy";
+import { addCanvasEventListeners, removeCanvasEventListeners } from "./core/canvasEventListeners";
 
 // url => loader instance
 const WASM_LOADERS = {};
@@ -496,9 +497,7 @@ export class RemoteSession {
       canvas = document.createElement("canvas");
       canvas.setAttribute("class", canvasSelector.substring(1));
       canvas.setAttribute("tabindex", "0");
-      // @contextmenu.prevent
-      // @click="canvas.focus()"
-      // @mouseenter="canvas.focus()"
+      addCanvasEventListeners(canvas);
     }
 
     targetElement.appendChild(canvas);
@@ -514,6 +513,7 @@ export class RemoteSession {
     const canvasSelector = this.getCanvasSelector(renderWindowId);
     const canvas = document.querySelector(canvasSelector);
     if (canvas) {
+      removeCanvasEventListeners(canvas);
       this.offlineCanvasContainer.appendChild(canvas);
     }
   }
