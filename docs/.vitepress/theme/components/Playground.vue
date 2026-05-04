@@ -124,7 +124,7 @@ async function createHtmlJsPlayground(options) {
     ".cm-activeLineGutter": {
       backgroundColor: "var(--vp-c-bg-soft)",
     },
-    ".cm-selectionBackground, .cm-content ::selection": {
+    "&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection": {
       backgroundColor: "color-mix(in srgb, var(--vp-c-brand-1) 22%, transparent)",
     },
     ".cm-cursor, .cm-dropCursor": {
