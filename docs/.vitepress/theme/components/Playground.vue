@@ -1,15 +1,19 @@
 <script setup>
 
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-
-import { blankSlate, workingWithObjects, observers } from "./playgroundData"
+import { computed, onBeforeUnmount, onMounted, ref, useAttrs } from "vue";
 
 const props = defineProps({
-  exampleName: {
-    type: String,
-    default: 'blankSlate',
+  displayIFrame: {
+    type: Boolean,
+    default: false,
   },
+  consoleMinHeight: {
+    type: String,
+    default: '200px',
+  }
 })
+
+const attrs = useAttrs();
 
 let playground = null;
 const activeTab = ref("js");
@@ -21,6 +25,40 @@ const editorHostJsRef = ref(null);
 const consoleOutputRef = ref(null);
 const tabJsRef = ref(null);
 const tabHtmlRef = ref(null);
+const inlineSourceRef = ref(null);
+
+function trimSingleOuterNewline(text) {
+  let output = text;
+  if (output.startsWith("\n")) output = output.slice(1);
+  if (output.endsWith("\n")) output = output.slice(0, -1);
+  return output;
+}
+
+function getInlineSnippet(node) {
+  if (!node) return undefined;
+  if (node instanceof HTMLTextAreaElement) {
+    return trimSingleOuterNewline(node.value);
+  }
+  return trimSingleOuterNewline(node.textContent ?? "");
+}
+
+function readInlineSource() {
+  const container = inlineSourceRef.value;
+  if (!container) {
+    return {
+      html: undefined,
+      js: undefined,
+    };
+  }
+
+  const htmlNode = container.querySelector('[data-lang="html"]');
+  const jsNode = container.querySelector('[data-lang="js"]');
+
+  return {
+    html: getInlineSnippet(htmlNode),
+    js: getInlineSnippet(jsNode),
+  };
+}
 
 function requireElement(name, element) {
   if (!element) throw new Error(`Missing required element ref: ${name}`);
@@ -66,12 +104,25 @@ function onReset() {
   playground?.reset();
 }
 
+function onCopy() {
+  const content = isHtmlTab.value ? playground?.getHtml() : playground?.getJs();
+  if (content) {
+    navigator.clipboard.writeText(content).catch((err) => {
+      console.error("Failed to copy:", err);
+    });
+  }
+}
+
+function createIframeId() {
+  return `vtk-iframe-${Math.random().toString(36).slice(2, 10)}`;
+}
+
 async function createHtmlJsPlayground(options) {
   const {
     initialHtml,
     initialJs,
     elements,
-    displayIFrame = false,
+    displayIFrame,
   } = options;
 
   if (!initialHtml || !initialJs) {
@@ -99,7 +150,10 @@ async function createHtmlJsPlayground(options) {
 
   // Console output helper.
   const consoleSink = createConsoleSink(consoleOutput);
+  const iframeId = createIframeId();
+  outputIframe.id = iframeId;
   const detachConsoleBridge = attachIframeConsoleBridge({
+    iframeId,
     onMessage: (method, args) => consoleSink.append(args, method),
   });
 
@@ -211,6 +265,7 @@ async function createHtmlJsPlayground(options) {
         html: htmlState.doc.toString(),
         js: jsState.doc.toString(),
         consoleProxy: true,
+        iframeId,
       });
     },
     reset: () => {
@@ -236,9 +291,6 @@ async function createHtmlJsPlayground(options) {
 
 function createConsoleSink(outputDiv) {
   function append(args, type) {
-    const line = document.createElement("div");
-    line.className = `log-line log-${type}`;
-
     const content = (args ?? []).map((arg) => {
       if (typeof arg === "object") {
         try {
@@ -250,25 +302,24 @@ function createConsoleSink(outputDiv) {
       return String(arg);
     }).join(" ");
 
-    line.textContent = `> ${content}`;
-    outputDiv.appendChild(line);
-    outputDiv.scrollTop = outputDiv.scrollHeight;
+    outputDiv.textContent += `${content}\n`;
   }
 
   function clear() {
-    outputDiv.innerHTML = "";
+    outputDiv.textContent = "";
   }
 
   function setReady() {
-    outputDiv.innerHTML = '<div class="log-line">> Ready.</div>';
+    outputDiv.textContent = "> Ready.";
   }
 
   return { append, clear, setReady };
 }
 
-function attachIframeConsoleBridge({ onMessage }) {
+function attachIframeConsoleBridge({ iframeId, onMessage }) {
   function handler(event) {
     if (!event?.data || event.data.source !== "iframe-runner") return;
+    if (event.data.iframeId !== iframeId) return;
     const { method, args } = event.data;
     onMessage(method, args);
   }
@@ -280,7 +331,7 @@ function attachIframeConsoleBridge({ onMessage }) {
 function createIframeRunner({ iframe }) {
   let runId = 0;
 
-  async function run({ html, js, consoleProxy }) {
+  async function run({ html, js, consoleProxy, iframeId }) {
     runId += 1;
     const current = runId;
     // Assign onload before setting srcdoc to avoid races.
@@ -301,6 +352,7 @@ function createIframeRunner({ iframe }) {
         script.textContent = buildInjectedModuleSource({
           userCode: js,
           consoleProxy,
+          iframeId,
         });
         iframeDoc.body.appendChild(script);
       } catch (e) {
@@ -315,7 +367,7 @@ function createIframeRunner({ iframe }) {
   return { run };
 }
 
-function buildInjectedModuleSource({ userCode, consoleProxy }) {
+function buildInjectedModuleSource({ userCode, consoleProxy, iframeId }) {
   if (!consoleProxy) return userCode;
   return `// Console proxy into parent
 const originalConsole = {
@@ -326,7 +378,7 @@ const originalConsole = {
 
 function send(method, args) {
   try {
-    window.parent.postMessage({ source: "iframe-runner", method, args }, "*");
+    window.parent.postMessage({ source: "iframe-runner", iframeId: ${JSON.stringify(iframeId)}, method, args }, "*");
   } catch {
     // ignore
   }
@@ -341,18 +393,12 @@ ${userCode}`;
 }
 
 onMounted(async () => {
-  const { displayIFrame, html, js } = (() => {
-    if (props.exampleName === "objects") {
-      return workingWithObjects;
-    } else if (props.exampleName === "observers") {
-      return observers;
-    } else {
-      return blankSlate;
-    }
-  })();
+  const inline = readInlineSource();
+  let displayIFrame = props.displayIFrame;
+
   playground = await createHtmlJsPlayground({
-    initialHtml: html,
-    initialJs: js,
+    initialHtml: inline.html,
+    initialJs: inline.js,
     elements: {
       editorHostHtml: requireElement("editorHostHtml", editorHostHtmlRef.value),
       editorHostJs: requireElement("editorHostJs", editorHostJsRef.value),
@@ -375,15 +421,41 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="playground">
-    <iframe ref="outputIframeRef" id="vtk-iframe" src="about:blank" scrolling="no"></iframe>
+    <div ref="inlineSourceRef" class="inline-source">
+      <slot />
+    </div>
 
-    <div class="tabs" role="tablist" aria-label="Code tabs">
-      <button ref="tabJsRef" class="tab" id="tab-js" type="button" role="tab" :aria-selected="String(!isHtmlTab)"
-        aria-controls="panel-js" :tabindex="!isHtmlTab ? 0 : -1" @click="onTabClick('js')"
-        @keydown="onTabKeyDown">JS</button>
-      <button ref="tabHtmlRef" class="tab" id="tab-html" type="button" role="tab" :aria-selected="String(isHtmlTab)"
-        aria-controls="panel-html" :tabindex="isHtmlTab ? 0 : -1" @click="onTabClick('html')"
-        @keydown="onTabKeyDown">HTML</button>
+    <iframe ref="outputIframeRef" src="about:blank" scrolling="no"></iframe>
+
+    <div class="editor-header">
+      <div class="tabs" role="tablist" aria-label="Code tabs">
+        <button ref="tabJsRef" class="tab" id="tab-js" type="button" role="tab" :aria-selected="String(!isHtmlTab)"
+          aria-controls="panel-js" :tabindex="!isHtmlTab ? 0 : -1" @click="onTabClick('js')"
+          @keydown="onTabKeyDown">JS</button>
+        <button ref="tabHtmlRef" class="tab" id="tab-html" type="button" role="tab" :aria-selected="String(isHtmlTab)"
+          aria-controls="panel-html" :tabindex="isHtmlTab ? 0 : -1" @click="onTabClick('html')"
+          @keydown="onTabKeyDown">HTML</button>
+      </div>
+      <button class="copy-btn" type="button" aria-label="Copy current code" title="Copy current code" @click="onCopy">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M9 9.75A2.25 2.25 0 0 1 11.25 7.5h6A2.25 2.25 0 0 1 19.5 9.75v7.5a2.25 2.25 0 0 1-2.25 2.25h-6A2.25 2.25 0 0 1 9 17.25v-7.5Z"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+          />
+          <path
+            d="M15 7.5V6.75A2.25 2.25 0 0 0 12.75 4.5h-6A2.25 2.25 0 0 0 4.5 6.75v7.5a2.25 2.25 0 0 0 2.25 2.25H9"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+          />
+        </svg>
+      </button>
     </div>
 
     <div id="panel-html" class="tabpanel" role="tabpanel" aria-labelledby="tab-html" :hidden="!isHtmlTab">
@@ -397,9 +469,7 @@ onBeforeUnmount(() => {
       <button id="run-btn" @click="onRun">Run</button>
       <button id="reset-btn" @click="onReset">Reset</button>
     </div>
-    <div ref="consoleOutputRef" id="console-output" class="console">
-      <div class="log-line">> Ready.</div>
-    </div>
+    <textarea ref="consoleOutputRef" name="console-output" class="console"></textarea>
   </div>
 </template>
 
@@ -415,6 +485,14 @@ body {
   overflow: hidden;
   border: 1px solid var(--vp-c-divider);
   background: var(--vp-c-bg);
+}
+
+.editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--vp-c-divider);
+  background: var(--vp-c-bg-soft);
 }
 
 .toolbar {
@@ -439,11 +517,26 @@ button:hover {
   background: var(--vp-c-bg-mute);
 }
 
+#run-btn {
+  border-color: var(--vp-c-tip-2);
+}
+
+#run-btn:hover {
+  background-color: rgba(151, 150, 150, 0.293);
+}
+
+#reset-btn {
+  border-color: var(--vp-c-brand-1);
+}
+
+#reset-btn:hover {
+  background-color: rgba(151, 150, 150, 0.293);
+}
+
 .tabs {
   display: flex;
   gap: 0;
-  border-bottom: 1px solid var(--vp-c-divider);
-  background: var(--vp-c-bg-soft);
+  background: transparent;
 }
 
 .tab {
@@ -476,6 +569,24 @@ button:hover {
   outline-offset: -2px;
 }
 
+.copy-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin-right: 10px;
+  padding: 0;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 4px;
+  background: var(--vp-c-bg);
+}
+
+.copy-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
 /* Editor area */
 .cm-editor {
   height: var(--playground-editor-height, 400px);
@@ -484,11 +595,10 @@ button:hover {
 
 /* Console Output */
 .console {
-  height: 150px;
-  overflow-y: auto;
-  padding: 10px;
-  font-family: 'Lucida Console', 'Monaco', monospace;
-  font-size: 13px;
+  width: 100%;
+  min-height: v-bind('props.consoleMinHeight');
+  max-height: 300px;
+  font-weight: bold;
   border-top: 1px solid var(--vp-c-divider);
   background: var(--vp-c-bg-soft);
   color: var(--vp-c-text-1);
@@ -514,5 +624,9 @@ iframe {
   width: 100%;
   border: none;
   display: block;
+}
+
+.inline-source {
+  display: none;
 }
 </style>
