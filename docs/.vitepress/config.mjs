@@ -54,7 +54,6 @@ export default defineConfig({
       { text: "Roadmap",
         items: [
           { text: "Overview", link: "/roadmap/" },
-          { text: "Feature Status", link: "/roadmap/features" },
           { text: "Module Availability", link: "/roadmap/modules" },
         ]
       },
@@ -93,8 +92,7 @@ export default defineConfig({
           text: "For JavaScript developers",
           items: [
             { text: "Getting started", link: "/guide/js/" },
-            { text: "Working With Objects", link: "/guide/js/objects" },
-            { text: "Observers", link: "/guide/js/observers" },
+            { text: "Primer on VTK.wasm", link: "/guide/js/primer" },
             { text: "HTML Script Tag", link: "/guide/js/plain" },
             { text: "Bundler Integration", link: "/guide/js/bundler" },
           ],
@@ -117,7 +115,6 @@ export default defineConfig({
       ],
       "/roadmap/": [
         { text: "Overview", link: "/roadmap/" },
-        { text: "Feature Status", link: "/roadmap/features" },
         { text: "Module Availability", link: "/roadmap/modules" },
       ],
       "/usecase/": [{ text: "Examples", link: "/usecase/index" }],
